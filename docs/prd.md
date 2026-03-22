@@ -1,7 +1,7 @@
 # 一、项目名称
 
-**FIRE CN Calculator（fire-cn-calculator）**
-副标题：A China-aware FIRE calculator
+**FIRE 财务自由测算器（fire-cn-calculator）**
+副标题：更贴近中国生活结构的 FIRE 测算工具
 
 ---
 

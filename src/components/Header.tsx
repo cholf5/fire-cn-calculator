@@ -12,8 +12,8 @@ export function Header({ themeMode, onThemeChange }: HeaderProps) {
     <header className="hero">
       <div className="hero-topbar">
         <div>
-          <p className="eyebrow">A China-aware FIRE calculator</p>
-          <h1>FIRE CN Calculator</h1>
+          <p className="eyebrow">更贴近中文用户语境的 FIRE 测算工具</p>
+          <h1>FIRE 财务自由测算器</h1>
           <p className="hero-copy">
             用更贴近中国生活结构的口径，估算你的 FIRE 目标资产。
           </p>

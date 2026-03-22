@@ -85,7 +85,7 @@ export function ResultPanel({ values, result }: ResultPanelProps) {
 
   async function handleCopySummary() {
     const summaryText = [
-      "FIRE 当前结果摘要",
+      "FIRE 财务自由测算结果摘要",
       `推荐准备资产：${formatCurrency(recommendedTarget)}`,
       `基础估算：${formatCurrency(result.fireTarget)}`,
       `长期覆盖建议：${formatCurrency(result.longevityAdjustedTarget)}`,

@@ -78,7 +78,7 @@ export async function createShareCardBlob(data: ShareCardData): Promise<Blob> {
 
   context.fillStyle = "#f0ba68";
   context.font = '600 24px "IBM Plex Sans", "Noto Sans SC", sans-serif';
-  context.fillText("FIRE CN Calculator", 76, 94);
+  context.fillText("FIRE 财务自由测算器", 76, 94);
 
   context.fillStyle = "#f9f5ec";
   context.font = '700 72px "IBM Plex Sans", "Noto Sans SC", sans-serif';
