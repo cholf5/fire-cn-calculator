@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import type { FireCalculationResult, FireFormValues } from "../core/types";
 import { formatCurrency, formatPercent } from "../utils/format";
 
@@ -7,9 +8,40 @@ interface ResultPanelProps {
 }
 
 export function ResultPanel({ values, result }: ResultPanelProps) {
+  const [copyState, setCopyState] = useState<"idle" | "success" | "error">("idle");
   const barMax = result.upperBound;
   const recommendedWidth = `${(result.fireTarget / barMax) * 100}%`;
   const conservativeWidth = `${(result.lowerBound / barMax) * 100}%`;
+
+  useEffect(() => {
+    if (copyState === "idle") {
+      return;
+    }
+
+    const timer = window.setTimeout(() => {
+      setCopyState("idle");
+    }, 1800);
+
+    return () => {
+      window.clearTimeout(timer);
+    };
+  }, [copyState]);
+
+  async function handleCopyLink() {
+    try {
+      await navigator.clipboard.writeText(window.location.href);
+      setCopyState("success");
+    } catch {
+      setCopyState("error");
+    }
+  }
+
+  const copyLabel =
+    copyState === "success"
+      ? "已复制"
+      : copyState === "error"
+        ? "复制失败"
+        : "复制分享链接";
 
   return (
     <section className="panel result-panel">
@@ -19,6 +51,9 @@ export function ResultPanel({ values, result }: ResultPanelProps) {
         <p className="result-caption">
           基于 {values.hasHouse ? "有房" : "无房"}、{formatPercent(values.swr)} 提取率估算
         </p>
+        <button className="share-button" type="button" onClick={handleCopyLink}>
+          {copyLabel}
+        </button>
       </div>
 
       <div className="result-grid">

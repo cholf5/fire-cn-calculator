@@ -244,6 +244,20 @@ input {
   margin: 12px 0 0;
 }
 
+.share-button {
+  margin-top: 16px;
+  padding: 10px 16px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #f9f5ec;
+  cursor: pointer;
+}
+
+.share-button:hover {
+  background: rgba(255, 255, 255, 0.14);
+}
+
 .result-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));

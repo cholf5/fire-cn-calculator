@@ -1,6 +1,6 @@
-import { render, screen } from "@testing-library/react";
+import { act, fireEvent, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { expect, test } from "vitest";
+import { expect, test, vi } from "vitest";
 import App from "./App";
 
 test("切换轻奢预设后会即时更新主结果", async () => {
@@ -36,4 +36,35 @@ test("URL 参数会覆盖 localStorage 并反映到首屏结果", () => {
   render(<App />);
 
   expect(screen.getByText("¥ 5,544,000")).not.toBeNull();
+});
+
+test("点击复制分享链接后会复制当前绝对链接并短暂显示已复制", async () => {
+  vi.useFakeTimers();
+  const writeText = vi.fn().mockResolvedValue(undefined);
+
+  Object.defineProperty(navigator, "clipboard", {
+    configurable: true,
+    value: {
+      writeText,
+    },
+  });
+
+  window.history.replaceState({}, "", "/?m=12000&h=0");
+
+  render(<App />);
+
+  await act(async () => {
+    fireEvent.click(screen.getByRole("button", { name: "复制分享链接" }));
+    await Promise.resolve();
+  });
+
+  expect(writeText).toHaveBeenCalledWith(window.location.href);
+  expect(screen.getByRole("button", { name: "已复制" })).not.toBeNull();
+
+  act(() => {
+    vi.advanceTimersByTime(2000);
+  });
+
+  expect(screen.getByRole("button", { name: "复制分享链接" })).not.toBeNull();
+  vi.useRealTimers();
 });
