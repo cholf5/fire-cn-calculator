@@ -80,11 +80,15 @@ export function sanitizeFormValues(values: Partial<FireFormValues>): FireFormVal
   };
 }
 
-function getSafetyLabel(swr: number): string {
-  if (swr <= 0.03) {
+function getSafetyLabel(values: FireFormValues, realReturn: number): string {
+  if (realReturn <= 0) {
+    return "风险较高";
+  }
+
+  if (values.swr <= 0.03) {
     return "较保守";
   }
-  if (swr <= 0.04) {
+  if (values.swr <= 0.04) {
     return "相对安全";
   }
   return "风险较高";
@@ -92,11 +96,6 @@ function getSafetyLabel(swr: number): string {
 
 function getRiskHighlights(values: FireFormValues): string[] {
   const highlights: string[] = [];
-  const fallbackHighlights = [
-    "投资收益存在波动",
-    "医疗支出可能高于预期",
-    "通胀可能侵蚀购买力",
-  ];
   const realReturn =
     (1 + values.returnRate) / (1 + values.inflationRate) - 1;
 
@@ -112,17 +111,7 @@ function getRiskHighlights(values: FireFormValues): string[] {
     highlights.push("无房状态下租住成本可能继续上升");
   }
 
-  for (const item of fallbackHighlights) {
-    if (highlights.length >= 3) {
-      break;
-    }
-
-    if (!highlights.includes(item)) {
-      highlights.push(item);
-    }
-  }
-
-  return highlights.slice(0, 3);
+  return highlights;
 }
 
 export function calculateFire(values: FireFormValues): FireCalculationResult {
@@ -160,7 +149,7 @@ export function calculateFire(values: FireFormValues): FireCalculationResult {
     longevityAdjustedTarget,
     longevityAdjustmentDelta: longevityAdjustedTarget - fireTarget,
     realReturn,
-    safetyLabel: getSafetyLabel(values.swr),
+    safetyLabel: getSafetyLabel(values, realReturn),
     riskHighlights: getRiskHighlights(values),
     lowerBound: fireTarget * 0.8,
     upperBound: fireTarget * 1.2,

@@ -179,3 +179,13 @@ test("手动切换主题后会更新根节点主题标记", async () => {
 
   expect(document.documentElement.dataset.theme).toBe("dark");
 });
+
+test("未命中动态风险时显示空状态，并在免责声明区域常驻长期提醒", () => {
+  window.history.replaceState({}, "", "/?r=0.05&i=0.03&h=1&s=0.04");
+
+  render(<App />);
+
+  expect(screen.getByText("当前参数下未触发高优先级风险提示。")).not.toBeNull();
+  expect(screen.getByText("长期提醒")).not.toBeNull();
+  expect(screen.getByText("投资收益存在波动，需预留波动缓冲。")).not.toBeNull();
+});

@@ -497,6 +497,11 @@ input {
   padding-left: 18px;
 }
 
+.risk-empty {
+  margin: 0;
+  color: var(--result-muted);
+}
+
 .risk-card li + li {
   margin-top: 8px;
 }
@@ -512,6 +517,16 @@ input {
 .disclaimer p {
   margin: 8px 0 0;
   color: var(--disclaimer-text);
+}
+
+.disclaimer ul {
+  margin: 12px 0 0;
+  padding-left: 18px;
+  color: var(--disclaimer-text);
+}
+
+.disclaimer li + li {
+  margin-top: 8px;
 }
 
 @media (max-width: 920px) {

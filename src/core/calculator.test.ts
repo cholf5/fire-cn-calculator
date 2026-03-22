@@ -21,13 +21,15 @@ describe("calculateFire", () => {
     expect(result.fireTarget).toBe(4620000);
   });
 
-  test("有房时住房成本为 0，且安全等级按 SWR 映射", () => {
+  test("有房时住房成本为 0，且实际收益率为正时安全等级按 SWR 映射", () => {
     const values = {
       ...getDefaultFormValues(),
       monthlyBaseExpense: 8000,
       cityTier: "tier2" as const,
       hasHouse: true,
       medicalExpenseRatio: 0.1,
+      returnRate: 0.05,
+      inflationRate: 0.03,
       swr: 0.03,
     };
 
@@ -35,7 +37,6 @@ describe("calculateFire", () => {
 
     expect(result.monthlyHousingCost).toBe(0);
     expect(result.safetyLabel).toBe("较保守");
-    expect(result.riskHighlights).toContain("医疗支出可能高于预期");
   });
 
   test("通胀与收益率产生独立的实际收益率提示", () => {
@@ -66,6 +67,29 @@ describe("calculateFire", () => {
       "当前提取率偏高，回撤期容错更低",
       "无房状态下租住成本可能继续上升",
     ]);
+  });
+
+  test("实际收益率不为正时安全等级会降为风险较高", () => {
+    const result = calculateFire({
+      ...getDefaultFormValues(),
+      returnRate: 0,
+      inflationRate: 0.08,
+      swr: 0.04,
+    });
+
+    expect(result.safetyLabel).toBe("风险较高");
+  });
+
+  test("未触发高优先级条件时不再混入兜底风险提示", () => {
+    const result = calculateFire({
+      ...getDefaultFormValues(),
+      returnRate: 0.05,
+      inflationRate: 0.03,
+      hasHouse: true,
+      swr: 0.04,
+    });
+
+    expect(result.riskHighlights).toEqual([]);
   });
 
   test("有房时住房年成本为 0，长期校正参考可正常计算", () => {

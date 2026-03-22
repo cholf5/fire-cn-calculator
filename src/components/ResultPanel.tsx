@@ -179,11 +179,15 @@ export function ResultPanel({ values, result }: ResultPanelProps) {
 
       <div className="risk-card">
         <h2>风险提示</h2>
-        <ul>
-          {result.riskHighlights.map((item) => (
-            <li key={item}>{item}</li>
-          ))}
-        </ul>
+        {result.riskHighlights.length > 0 ? (
+          <ul>
+            {result.riskHighlights.map((item) => (
+              <li key={item}>{item}</li>
+            ))}
+          </ul>
+        ) : (
+          <p className="risk-empty">当前参数下未触发高优先级风险提示。</p>
+        )}
       </div>
     </section>
   );
