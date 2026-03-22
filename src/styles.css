@@ -342,8 +342,7 @@ input {
 
 .result-label,
 .result-caption,
-.result-grid span,
-.tag-label {
+.summary-card span {
   color: var(--result-muted);
 }
 
@@ -369,6 +368,27 @@ input {
   margin-top: 16px;
 }
 
+.result-status-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.1);
+  color: #f9f5ec;
+  font-size: 0.92rem;
+}
+
+.status-pill-alt {
+  background: rgba(111, 208, 189, 0.16);
+}
+
 .share-button {
   padding: 10px 16px;
   border: 1px solid var(--result-button-border);
@@ -382,18 +402,16 @@ input {
   background: rgba(255, 255, 255, 0.14);
 }
 
-.result-grid {
+.summary-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 12px;
 }
 
-.result-grid div,
-.tag-block,
-.breakdown-card,
-.longevity-card,
+.summary-card,
+.insight-card,
 .comparison-card,
-.composition-card,
+.expense-card,
 .range-card,
 .risk-card {
   padding: 16px;
@@ -401,28 +419,26 @@ input {
   background: var(--result-card-bg);
 }
 
-.result-grid strong,
+.summary-card strong,
 .breakdown-grid strong,
-.tag-block strong {
+.insight-grid strong {
   display: block;
   margin-top: 6px;
   font-size: 1.1rem;
 }
 
-.breakdown-card h2 {
-  margin: 0 0 14px;
-  font-size: 1rem;
-}
-
-.longevity-card h2 {
-  margin: 0 0 14px;
-  font-size: 1rem;
-}
-
+.card-heading h2,
 .comparison-card h2,
-.composition-card h2 {
+.range-card h2,
+.risk-card h2 {
   margin: 0 0 14px;
   font-size: 1rem;
+}
+
+.card-heading p {
+  margin: -6px 0 14px;
+  color: var(--result-muted);
+  font-size: 0.92rem;
 }
 
 .breakdown-grid {
@@ -431,9 +447,9 @@ input {
   gap: 12px;
 }
 
-.longevity-grid {
+.insight-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 12px;
 }
 
@@ -443,7 +459,10 @@ input {
   border-radius: 0;
 }
 
-.longevity-grid div {
+.insight-grid div,
+.summary-card,
+.comparison-meta,
+.composition-legend div {
   padding: 0;
   background: transparent;
   border-radius: 0;
@@ -453,12 +472,30 @@ input {
   color: var(--result-muted);
 }
 
-.longevity-grid span,
-.longevity-caption {
+.insight-grid span,
+.longevity-caption,
+.insight-lead {
   color: var(--result-muted);
 }
 
-.longevity-grid strong {
+.insight-lead {
+  margin: 0 0 16px;
+  font-size: 1rem;
+  line-height: 1.55;
+}
+
+.insight-lead strong {
+  margin-left: 6px;
+  color: #f9f5ec;
+}
+
+.summary-card,
+.insight-grid div {
+  padding: 0;
+  border-radius: 0;
+}
+
+.insight-grid strong {
   display: block;
   margin-top: 6px;
   font-size: 1.1rem;
@@ -537,10 +574,10 @@ input {
   margin-top: 14px;
 }
 
-.composition-legend div {
-  padding: 0;
-  background: transparent;
-  border-radius: 0;
+.subsection-title {
+  margin: 18px 0 12px;
+  font-size: 0.95rem;
+  color: #f9f5ec;
 }
 
 .risk-tag {
@@ -635,7 +672,7 @@ input {
     border-radius: 22px;
   }
 
-  .result-grid {
+  .summary-grid {
     grid-template-columns: 1fr;
   }
 
@@ -643,7 +680,7 @@ input {
     grid-template-columns: 1fr;
   }
 
-  .longevity-grid {
+  .insight-grid {
     grid-template-columns: 1fr;
   }
 

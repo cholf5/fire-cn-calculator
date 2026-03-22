@@ -136,6 +136,7 @@ test("结果区会展示长期校正参考与差额", () => {
 
   render(<App />);
 
+  expect(screen.getByText("长期结论")).not.toBeNull();
   expect(screen.getAllByText("长期校正参考").length).toBeGreaterThan(0);
   expect(screen.getByText("基于退休年限与未来支出增长估算")).not.toBeNull();
   expect(screen.getByText(/与主结果差额/)).not.toBeNull();
