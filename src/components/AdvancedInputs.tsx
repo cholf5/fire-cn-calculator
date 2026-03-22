@@ -34,6 +34,7 @@ export function AdvancedInputs({ values, onChange }: AdvancedInputsProps) {
             suffix="%"
             onChange={(value) => onChange("medicalExpenseRatio", value / 100)}
           />
+          <p className="field-hint">会按比例抬高年支出估算。</p>
 
           <NumberField
             label="租金增长率"

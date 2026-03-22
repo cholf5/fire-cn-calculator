@@ -25,6 +25,7 @@ export function BasicInputs({ values, onChange }: BasicInputsProps) {
         suffix="元"
         onChange={(value) => onChange("monthlyBaseExpense", value)}
       />
+      <p className="field-hint">这里填不含住房的基础月支出。</p>
 
       <fieldset className="field radio-group">
         <legend className="field-label">城市等级</legend>
@@ -58,6 +59,7 @@ export function BasicInputs({ values, onChange }: BasicInputsProps) {
           </label>
         </div>
       </fieldset>
+      <p className="field-hint">只在无房时影响住房补充比例。</p>
 
       <label className="toggle-row">
         <span className="field-label">是否有房</span>
@@ -99,6 +101,7 @@ export function BasicInputs({ values, onChange }: BasicInputsProps) {
         suffix="%"
         onChange={(value) => onChange("swr", value / 100)}
       />
+      <p className="field-hint">表示退休后每年的资产提取率。</p>
     </section>
   );
 }
