@@ -49,4 +49,22 @@ describe("calculateFire", () => {
 
     expect(result.realReturn).toBeCloseTo(0.019417, 6);
   });
+
+  test("风险提示会根据实际收益率、SWR 和无房状态动态变化", () => {
+    const values = {
+      ...getDefaultFormValues(),
+      hasHouse: false,
+      returnRate: 0.02,
+      inflationRate: 0.03,
+      swr: 0.05,
+    };
+
+    const result = calculateFire(values);
+
+    expect(result.riskHighlights).toEqual([
+      "实际收益率为负，长期购买力可能下滑",
+      "当前提取率偏高，回撤期容错更低",
+      "无房状态下租住成本可能继续上升",
+    ]);
+  });
 });

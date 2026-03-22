@@ -91,13 +91,38 @@ function getSafetyLabel(swr: number): string {
 }
 
 function getRiskHighlights(values: FireFormValues): string[] {
-  const highlights = ["投资收益存在波动", "医疗支出可能高于预期", "通胀可能侵蚀购买力"];
+  const highlights: string[] = [];
+  const fallbackHighlights = [
+    "投资收益存在波动",
+    "医疗支出可能高于预期",
+    "通胀可能侵蚀购买力",
+  ];
+  const realReturn =
+    (1 + values.returnRate) / (1 + values.inflationRate) - 1;
 
-  if (!values.hasHouse) {
-    return [highlights[0], "无房状态下租住成本可能继续上升", highlights[2]];
+  if (realReturn <= 0) {
+    highlights.push("实际收益率为负，长期购买力可能下滑");
   }
 
-  return highlights;
+  if (values.swr > 0.04) {
+    highlights.push("当前提取率偏高，回撤期容错更低");
+  }
+
+  if (!values.hasHouse) {
+    highlights.push("无房状态下租住成本可能继续上升");
+  }
+
+  for (const item of fallbackHighlights) {
+    if (highlights.length >= 3) {
+      break;
+    }
+
+    if (!highlights.includes(item)) {
+      highlights.push(item);
+    }
+  }
+
+  return highlights.slice(0, 3);
 }
 
 export function calculateFire(values: FireFormValues): FireCalculationResult {
