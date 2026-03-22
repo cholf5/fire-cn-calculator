@@ -12,6 +12,7 @@ interface InputPanelProps {
   ) => void;
   onPresetSelect: (key: PresetKey) => void;
   onReset: () => void;
+  activePresetKey: PresetKey | null;
 }
 
 export function InputPanel({
@@ -19,10 +20,15 @@ export function InputPanel({
   onChange,
   onPresetSelect,
   onReset,
+  activePresetKey,
 }: InputPanelProps) {
   return (
     <aside className="panel input-panel">
-      <PresetSelector onSelect={onPresetSelect} onReset={onReset} />
+      <PresetSelector
+        onSelect={onPresetSelect}
+        onReset={onReset}
+        activePresetKey={activePresetKey}
+      />
       <BasicInputs values={values} onChange={onChange} />
       <AdvancedInputs values={values} onChange={onChange} />
     </aside>

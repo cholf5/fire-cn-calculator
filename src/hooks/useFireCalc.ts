@@ -23,6 +23,10 @@ export function useFireCalc() {
   }, [values]);
 
   const result = calculateFire(values);
+  const activePresetKey =
+    presets.find((preset) =>
+      Object.entries(preset.values).every(([key, value]) => values[key as keyof FireFormValues] === value),
+    )?.key ?? null;
 
   function updateValue<K extends keyof FireFormValues>(
     key: K,
@@ -53,6 +57,7 @@ export function useFireCalc() {
   return {
     values,
     result,
+    activePresetKey,
     updateValue,
     applyPreset,
     resetToDefaults,

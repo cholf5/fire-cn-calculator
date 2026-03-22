@@ -5,7 +5,14 @@ import { ResultPanel } from "./components/ResultPanel";
 import { useFireCalc } from "./hooks/useFireCalc";
 
 export default function App() {
-  const { values, result, updateValue, applyPreset, resetToDefaults } = useFireCalc();
+  const {
+    values,
+    result,
+    activePresetKey,
+    updateValue,
+    applyPreset,
+    resetToDefaults,
+  } = useFireCalc();
 
   return (
     <div className="app-shell">
@@ -14,6 +21,7 @@ export default function App() {
         <ResultPanel values={values} result={result} />
         <InputPanel
           values={values}
+          activePresetKey={activePresetKey}
           onChange={updateValue}
           onPresetSelect={applyPreset}
           onReset={resetToDefaults}

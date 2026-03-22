@@ -123,6 +123,11 @@ input {
   filter: brightness(0.98);
 }
 
+.preset-button.is-active {
+  background: #12433c;
+  color: #f9f5ec;
+}
+
 .field {
   display: block;
 }

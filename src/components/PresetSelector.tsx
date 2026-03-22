@@ -3,9 +3,14 @@ import { presets, type PresetKey } from "../config/presets";
 interface PresetSelectorProps {
   onSelect: (key: PresetKey) => void;
   onReset: () => void;
+  activePresetKey: PresetKey | null;
 }
 
-export function PresetSelector({ onSelect, onReset }: PresetSelectorProps) {
+export function PresetSelector({
+  onSelect,
+  onReset,
+  activePresetKey,
+}: PresetSelectorProps) {
   return (
     <section className="panel-section">
       <div className="section-heading">
@@ -22,7 +27,7 @@ export function PresetSelector({ onSelect, onReset }: PresetSelectorProps) {
         {presets.map((preset) => (
           <button
             key={preset.key}
-            className="preset-button"
+            className={`preset-button ${activePresetKey === preset.key ? "is-active" : ""}`.trim()}
             type="button"
             onClick={() => onSelect(preset.key)}
           >

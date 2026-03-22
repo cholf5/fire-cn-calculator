@@ -83,3 +83,23 @@ test("点击重置默认值后会恢复默认结果并清空 URL 参数", async 
   expect(screen.getByText("¥ 3,300,000")).not.toBeNull();
   expect(window.location.search).toBe("");
 });
+
+test("预设只在完全匹配时高亮，手动改值后取消高亮", async () => {
+  const user = userEvent.setup();
+
+  render(<App />);
+
+  expect(screen.getByRole("button", { name: "舒适" }).className).toContain("is-active");
+
+  await user.click(screen.getByRole("button", { name: "轻奢" }));
+
+  expect(screen.getByRole("button", { name: "轻奢" }).className).toContain("is-active");
+  expect(screen.getByRole("button", { name: "舒适" }).className).not.toContain("is-active");
+
+  await user.clear(screen.getByRole("spinbutton", { name: /月支出（不含住房）/ }));
+  await user.type(screen.getByRole("spinbutton", { name: /月支出（不含住房）/ }), "17500");
+
+  expect(screen.getByRole("button", { name: "轻奢" }).className).not.toContain("is-active");
+  expect(screen.getByRole("button", { name: "舒适" }).className).not.toContain("is-active");
+  expect(screen.getByRole("button", { name: "节制" }).className).not.toContain("is-active");
+});
