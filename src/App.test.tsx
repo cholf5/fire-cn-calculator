@@ -140,3 +140,42 @@ test("结果区会展示长期校正参考与差额", () => {
   expect(screen.getByText("基于退休年限与未来支出增长估算")).not.toBeNull();
   expect(screen.getByText(/与主结果差额/)).not.toBeNull();
 });
+
+test("点击复制当前结果摘要后会复制包含主结果和长期参考的纯文本", async () => {
+  const writeText = vi.fn().mockResolvedValue(undefined);
+
+  Object.defineProperty(navigator, "clipboard", {
+    configurable: true,
+    value: {
+      writeText,
+    },
+  });
+
+  render(<App />);
+
+  await act(async () => {
+    fireEvent.click(screen.getByRole("button", { name: "复制当前结果摘要" }));
+    await Promise.resolve();
+  });
+
+  const copiedText = writeText.mock.calls[0]?.[0] as string;
+
+  expect(copiedText).toContain("FIRE 所需资产");
+  expect(copiedText).toContain("长期校正参考");
+  expect(copiedText).toContain("年支出");
+  expect(copiedText).toContain("提取率");
+  expect(copiedText).toContain("实际收益率");
+  expect(copiedText).toContain("城市等级");
+  expect(copiedText).toContain("是否有房");
+});
+
+test("手动切换主题后会更新根节点主题标记", async () => {
+  const user = userEvent.setup();
+
+  render(<App />);
+
+  await user.click(screen.getByRole("button", { name: "主题切换" }));
+  await user.click(screen.getByRole("button", { name: "深色" }));
+
+  expect(document.documentElement.dataset.theme).toBe("dark");
+});

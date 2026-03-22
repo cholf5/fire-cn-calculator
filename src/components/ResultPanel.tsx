@@ -8,41 +8,88 @@ interface ResultPanelProps {
 }
 
 export function ResultPanel({ values, result }: ResultPanelProps) {
-  const [copyState, setCopyState] = useState<"idle" | "success" | "error">("idle");
+  const [copyLinkState, setCopyLinkState] = useState<"idle" | "success" | "error">("idle");
+  const [copySummaryState, setCopySummaryState] = useState<"idle" | "success" | "error">("idle");
   const barMax = result.upperBound;
   const recommendedWidth = `${(result.fireTarget / barMax) * 100}%`;
   const conservativeWidth = `${(result.lowerBound / barMax) * 100}%`;
   const annualHousingCost = result.monthlyHousingCost * 12;
+  const cityTierLabel =
+    values.cityTier === "tier1"
+      ? "一线"
+      : values.cityTier === "tier2"
+        ? "二线"
+        : "三四线";
 
   useEffect(() => {
-    if (copyState === "idle") {
+    if (copyLinkState === "idle") {
       return;
     }
 
     const timer = window.setTimeout(() => {
-      setCopyState("idle");
+      setCopyLinkState("idle");
     }, 1800);
 
     return () => {
       window.clearTimeout(timer);
     };
-  }, [copyState]);
+  }, [copyLinkState]);
+
+  useEffect(() => {
+    if (copySummaryState === "idle") {
+      return;
+    }
+
+    const timer = window.setTimeout(() => {
+      setCopySummaryState("idle");
+    }, 1800);
+
+    return () => {
+      window.clearTimeout(timer);
+    };
+  }, [copySummaryState]);
 
   async function handleCopyLink() {
     try {
       await navigator.clipboard.writeText(window.location.href);
-      setCopyState("success");
+      setCopyLinkState("success");
     } catch {
-      setCopyState("error");
+      setCopyLinkState("error");
     }
   }
 
-  const copyLabel =
-    copyState === "success"
+  async function handleCopySummary() {
+    const summaryText = [
+      "FIRE 当前结果摘要",
+      `FIRE 所需资产：${formatCurrency(result.fireTarget)}`,
+      `长期校正参考：${formatCurrency(result.longevityAdjustedTarget)}`,
+      `年支出：${formatCurrency(result.annualExpense)}`,
+      `提取率：${formatPercent(values.swr)}`,
+      `实际收益率：${formatPercent(result.realReturn, 2)}`,
+      `城市等级：${cityTierLabel}`,
+      `是否有房：${values.hasHouse ? "有房" : "无房"}`,
+    ].join("\n");
+
+    try {
+      await navigator.clipboard.writeText(summaryText);
+      setCopySummaryState("success");
+    } catch {
+      setCopySummaryState("error");
+    }
+  }
+
+  const copyLinkLabel =
+    copyLinkState === "success"
       ? "已复制"
-      : copyState === "error"
+      : copyLinkState === "error"
         ? "复制失败"
         : "复制分享链接";
+  const copySummaryLabel =
+    copySummaryState === "success"
+      ? "摘要已复制"
+      : copySummaryState === "error"
+        ? "摘要复制失败"
+        : "复制当前结果摘要";
 
   return (
     <section className="panel result-panel">
@@ -52,9 +99,14 @@ export function ResultPanel({ values, result }: ResultPanelProps) {
         <p className="result-caption">
           基于 {values.hasHouse ? "有房" : "无房"}、{formatPercent(values.swr)} 提取率估算
         </p>
-        <button className="share-button" type="button" onClick={handleCopyLink}>
-          {copyLabel}
-        </button>
+        <div className="result-actions">
+          <button className="share-button" type="button" onClick={handleCopyLink}>
+            {copyLinkLabel}
+          </button>
+          <button className="share-button" type="button" onClick={handleCopySummary}>
+            {copySummaryLabel}
+          </button>
+        </div>
       </div>
 
       <div className="result-grid">
