@@ -14,6 +14,14 @@ export function ResultPanel({ values, result }: ResultPanelProps) {
   const recommendedWidth = `${(result.fireTarget / barMax) * 100}%`;
   const conservativeWidth = `${(result.lowerBound / barMax) * 100}%`;
   const annualHousingCost = result.monthlyHousingCost * 12;
+  const targetComparisonMax = Math.max(result.fireTarget, result.longevityAdjustedTarget);
+  const fireTargetWidth = `${(result.fireTarget / targetComparisonMax) * 100}%`;
+  const longevityTargetWidth = `${(result.longevityAdjustedTarget / targetComparisonMax) * 100}%`;
+  const expenseCompositionTotal =
+    result.baseAnnualExpense + annualHousingCost + result.medicalAnnualExpense;
+  const baseExpenseWidth = `${(result.baseAnnualExpense / expenseCompositionTotal) * 100}%`;
+  const housingExpenseWidth = `${(annualHousingCost / expenseCompositionTotal) * 100}%`;
+  const medicalExpenseWidth = `${(result.medicalAnnualExpense / expenseCompositionTotal) * 100}%`;
   const cityTierLabel =
     values.cityTier === "tier1"
       ? "一线"
@@ -158,6 +166,51 @@ export function ResultPanel({ values, result }: ResultPanelProps) {
           </div>
         </div>
         <p className="longevity-caption">基于退休年限与未来支出增长估算</p>
+      </div>
+
+      <div className="comparison-card">
+        <h2>目标对比</h2>
+        <div className="comparison-group">
+          <div className="comparison-meta">
+            <span>SWR 主结果</span>
+            <strong>{formatCurrency(result.fireTarget)}</strong>
+          </div>
+          <div className="comparison-track" aria-hidden="true">
+            <div className="comparison-fill comparison-fill-main" style={{ width: fireTargetWidth }} />
+          </div>
+        </div>
+        <div className="comparison-group">
+          <div className="comparison-meta">
+            <span>长期校正参考</span>
+            <strong>{formatCurrency(result.longevityAdjustedTarget)}</strong>
+          </div>
+          <div className="comparison-track" aria-hidden="true">
+            <div className="comparison-fill comparison-fill-alt" style={{ width: longevityTargetWidth }} />
+          </div>
+        </div>
+      </div>
+
+      <div className="composition-card">
+        <h2>年支出构成</h2>
+        <div className="composition-track" aria-hidden="true">
+          <div className="composition-fill composition-fill-base" style={{ width: baseExpenseWidth }} />
+          <div className="composition-fill composition-fill-housing" style={{ width: housingExpenseWidth }} />
+          <div className="composition-fill composition-fill-medical" style={{ width: medicalExpenseWidth }} />
+        </div>
+        <div className="composition-legend">
+          <div>
+            <span>基础支出</span>
+            <strong>{formatCurrency(result.baseAnnualExpense)}</strong>
+          </div>
+          <div>
+            <span>住房补充</span>
+            <strong>{formatCurrency(annualHousingCost)}</strong>
+          </div>
+          <div>
+            <span>医疗增量</span>
+            <strong>{formatCurrency(result.medicalAnnualExpense)}</strong>
+          </div>
+        </div>
       </div>
 
       <div className="tag-block">

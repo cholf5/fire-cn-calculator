@@ -392,6 +392,8 @@ input {
 .tag-block,
 .breakdown-card,
 .longevity-card,
+.comparison-card,
+.composition-card,
 .range-card,
 .risk-card {
   padding: 16px;
@@ -413,6 +415,12 @@ input {
 }
 
 .longevity-card h2 {
+  margin: 0 0 14px;
+  font-size: 1rem;
+}
+
+.comparison-card h2,
+.composition-card h2 {
   margin: 0 0 14px;
   font-size: 1rem;
 }
@@ -458,6 +466,81 @@ input {
 
 .longevity-caption {
   margin: 14px 0 0;
+}
+
+.comparison-group + .comparison-group {
+  margin-top: 16px;
+}
+
+.comparison-meta,
+.composition-legend {
+  display: grid;
+  gap: 12px;
+}
+
+.comparison-meta {
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+  margin-bottom: 10px;
+}
+
+.comparison-meta span,
+.composition-legend span {
+  color: var(--result-muted);
+}
+
+.comparison-meta strong,
+.composition-legend strong {
+  font-size: 1rem;
+}
+
+.comparison-track,
+.composition-track {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  height: 16px;
+  padding: 3px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+}
+
+.comparison-fill,
+.composition-fill {
+  height: 100%;
+  border-radius: 999px;
+}
+
+.comparison-fill-main {
+  background: linear-gradient(90deg, #f7b14c 0%, #ffe0a8 100%);
+}
+
+.comparison-fill-alt {
+  background: linear-gradient(90deg, #6fd0bd 0%, #b6fff2 100%);
+}
+
+.composition-fill-base {
+  background: rgba(255, 224, 168, 0.9);
+}
+
+.composition-fill-housing {
+  background: rgba(247, 177, 76, 0.82);
+}
+
+.composition-fill-medical {
+  background: rgba(111, 208, 189, 0.82);
+}
+
+.composition-legend {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-top: 14px;
+}
+
+.composition-legend div {
+  padding: 0;
+  background: transparent;
+  border-radius: 0;
 }
 
 .risk-tag {
@@ -561,6 +644,10 @@ input {
   }
 
   .longevity-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .composition-legend {
     grid-template-columns: 1fr;
   }
 
