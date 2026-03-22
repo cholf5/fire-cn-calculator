@@ -14,6 +14,7 @@ export function ResultPanel({ values, result }: ResultPanelProps) {
   const recommendedWidth = `${(result.fireTarget / barMax) * 100}%`;
   const conservativeWidth = `${(result.lowerBound / barMax) * 100}%`;
   const annualHousingCost = result.monthlyHousingCost * 12;
+  const recommendedTarget = Math.max(result.fireTarget, result.longevityAdjustedTarget);
   const targetComparisonMax = Math.max(result.fireTarget, result.longevityAdjustedTarget);
   const fireTargetWidth = `${(result.fireTarget / targetComparisonMax) * 100}%`;
   const longevityTargetWidth = `${(result.longevityAdjustedTarget / targetComparisonMax) * 100}%`;
@@ -69,8 +70,9 @@ export function ResultPanel({ values, result }: ResultPanelProps) {
   async function handleCopySummary() {
     const summaryText = [
       "FIRE 当前结果摘要",
-      `FIRE 所需资产：${formatCurrency(result.fireTarget)}`,
-      `长期校正参考：${formatCurrency(result.longevityAdjustedTarget)}`,
+      `推荐准备资产：${formatCurrency(recommendedTarget)}`,
+      `基础估算：${formatCurrency(result.fireTarget)}`,
+      `长期覆盖建议：${formatCurrency(result.longevityAdjustedTarget)}`,
       `年支出：${formatCurrency(result.annualExpense)}`,
       `提取率：${formatPercent(values.swr)}`,
       `实际收益率：${formatPercent(result.realReturn, 2)}`,
@@ -98,25 +100,27 @@ export function ResultPanel({ values, result }: ResultPanelProps) {
       : copySummaryState === "error"
         ? "摘要复制失败"
         : "复制当前结果摘要";
-  const deltaDirectionText =
+  const adjustmentDirectionText =
     result.longevityAdjustmentDelta > 0
-      ? "高于主结果"
+      ? "上调"
       : result.longevityAdjustmentDelta < 0
-        ? "低于主结果"
-        : "与主结果持平";
+        ? "下调"
+        : "保持不变";
+  const recommendationReason =
+    recommendedTarget === result.longevityAdjustedTarget && result.longevityAdjustmentDelta > 0
+      ? "已把退休年限和未来支出增长一并考虑，建议优先按长期覆盖口径准备。"
+      : "按当前参数，两种口径结果接近，建议至少按当前推荐值准备。";
 
   return (
     <section className="panel result-panel">
       <div className="result-hero">
-        <p className="result-label">FIRE 所需资产</p>
-        <strong className="result-number">{formatCurrency(result.fireTarget)}</strong>
-        <p className="result-caption">
-          基于 {values.hasHouse ? "有房" : "无房"}、{formatPercent(values.swr)} 提取率估算
-        </p>
+        <p className="result-label">推荐准备资产</p>
+        <strong className="result-number">{formatCurrency(recommendedTarget)}</strong>
+        <p className="result-caption">{recommendationReason}</p>
         <div className="result-status-row">
           <span className="status-pill">安全等级：{result.safetyLabel}</span>
           <span className="status-pill status-pill-alt">
-            长期参考{deltaDirectionText}
+            长期因素{adjustmentDirectionText}
             {formatCurrency(Math.abs(result.longevityAdjustmentDelta))}
           </span>
         </div>
@@ -132,45 +136,42 @@ export function ResultPanel({ values, result }: ResultPanelProps) {
 
       <div className="summary-grid">
         <div className="summary-card">
+          <span>基础估算</span>
+          <strong>{formatCurrency(result.fireTarget)}</strong>
+        </div>
+        <div className="summary-card">
+          <span>长期覆盖建议</span>
+          <strong>{formatCurrency(result.longevityAdjustedTarget)}</strong>
+        </div>
+        <div className="summary-card">
           <span>年支出</span>
           <strong>{formatCurrency(result.annualExpense)}</strong>
-        </div>
-        <div className="summary-card">
-          <span>提取率</span>
-          <strong>{formatPercent(values.swr)}</strong>
-        </div>
-        <div className="summary-card">
-          <span>实际收益率</span>
-          <strong>{formatPercent(result.realReturn, 2)}</strong>
         </div>
       </div>
 
       <div className="insight-card">
         <div className="card-heading">
           <h2>长期结论</h2>
-          <p>把退休年限和未来支出增长一起考虑后的补充判断。</p>
+          <p>系统会优先采用更稳妥的口径，避免把两个结果同时当成最终答案。</p>
         </div>
         <p className="insight-lead">
-          长期校正参考{deltaDirectionText}
+          长期因素会把目标{adjustmentDirectionText}
           <strong>{formatCurrency(Math.abs(result.longevityAdjustmentDelta))}</strong>
-          ，说明单看 SWR 主结果可能
-          {result.longevityAdjustmentDelta > 0 ? "偏乐观" : result.longevityAdjustmentDelta < 0 ? "偏保守" : "基本一致"}。
+          ，所以当前更适合参考
+          <strong>{formatCurrency(recommendedTarget)}</strong>。
         </p>
         <div className="insight-grid">
           <div>
-            <span>长期校正参考</span>
+            <span>长期覆盖建议</span>
             <strong>{formatCurrency(result.longevityAdjustedTarget)}</strong>
           </div>
           <div>
-            <span>与主结果差额</span>
-            <strong>
-              {result.longevityAdjustmentDelta >= 0 ? "+" : "-"}
-              {formatCurrency(Math.abs(result.longevityAdjustmentDelta)).replace("¥ ", "¥ ")}
-            </strong>
+            <span>基础估算</span>
+            <strong>{formatCurrency(result.fireTarget)}</strong>
           </div>
           <div>
-            <span>安全等级</span>
-            <strong className="risk-tag">{result.safetyLabel}</strong>
+            <span>当前提取率</span>
+            <strong>{formatPercent(values.swr)}</strong>
           </div>
         </div>
         <p className="longevity-caption">基于退休年限与未来支出增长估算</p>
@@ -180,7 +181,7 @@ export function ResultPanel({ values, result }: ResultPanelProps) {
         <h2>目标对比</h2>
         <div className="comparison-group">
           <div className="comparison-meta">
-            <span>SWR 主结果</span>
+            <span>基础估算</span>
             <strong>{formatCurrency(result.fireTarget)}</strong>
           </div>
           <div className="comparison-track" aria-hidden="true">
@@ -189,7 +190,7 @@ export function ResultPanel({ values, result }: ResultPanelProps) {
         </div>
         <div className="comparison-group">
           <div className="comparison-meta">
-            <span>长期校正参考</span>
+            <span>长期覆盖建议</span>
             <strong>{formatCurrency(result.longevityAdjustedTarget)}</strong>
           </div>
           <div className="comparison-track" aria-hidden="true">
@@ -242,7 +243,7 @@ export function ResultPanel({ values, result }: ResultPanelProps) {
       <div className="range-card">
         <h2>资产区间参考</h2>
         <p>
-          低：{formatCurrency(result.lowerBound)} | 推荐：
+          低：{formatCurrency(result.lowerBound)} | 基础估算：
           {formatCurrency(result.fireTarget)} | 高：{formatCurrency(result.upperBound)}
         </p>
         <div className="range-bar">
