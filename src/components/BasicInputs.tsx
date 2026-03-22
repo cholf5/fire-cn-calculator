@@ -1,4 +1,5 @@
 import type { FireFormValues } from "../core/types";
+import { FieldLabel } from "./FieldLabel";
 import { NumberField } from "./NumberField";
 
 interface BasicInputsProps {
@@ -17,7 +18,12 @@ export function BasicInputs({ values, onChange }: BasicInputsProps) {
       </div>
 
       <NumberField
-        label="月支出（不含住房）"
+        label={
+          <FieldLabel
+            label="月支出（不含住房）"
+            helpText="这里填写不含房租或房贷的基础月支出，住房部分会按是否有房和城市等级单独估算。"
+          />
+        }
         value={values.monthlyBaseExpense}
         min={2000}
         max={30000}
@@ -25,10 +31,14 @@ export function BasicInputs({ values, onChange }: BasicInputsProps) {
         suffix="元"
         onChange={(value) => onChange("monthlyBaseExpense", value)}
       />
-      <p className="field-hint">这里填不含住房的基础月支出。</p>
 
       <fieldset className="field radio-group">
-        <legend className="field-label">城市等级</legend>
+        <legend className="field-label">
+          <FieldLabel
+            label="城市等级"
+            helpText="只在无房时影响住房补充比例，一线、二线、三四线会采用不同住房压力口径。"
+          />
+        </legend>
         <div className="radio-options">
           <label>
             <input
@@ -59,10 +69,14 @@ export function BasicInputs({ values, onChange }: BasicInputsProps) {
           </label>
         </div>
       </fieldset>
-      <p className="field-hint">只在无房时影响住房补充比例。</p>
 
       <label className="toggle-row">
-        <span className="field-label">是否有房</span>
+        <span className="field-label">
+          <FieldLabel
+            label="是否有房"
+            helpText="有房时住房补充按 0 计算；无房时会额外加入住房成本。"
+          />
+        </span>
         <button
           className={`toggle ${values.hasHouse ? "is-active" : ""}`}
           type="button"
@@ -73,7 +87,12 @@ export function BasicInputs({ values, onChange }: BasicInputsProps) {
       </label>
 
       <NumberField
-        label="投资收益率"
+        label={
+          <FieldLabel
+            label="投资收益率"
+            helpText="用于计算实际收益率，并参与长期覆盖建议的折现估算。"
+          />
+        }
         value={values.returnRate * 100}
         min={0}
         max={12}
@@ -83,7 +102,12 @@ export function BasicInputs({ values, onChange }: BasicInputsProps) {
       />
 
       <NumberField
-        label="通胀率"
+        label={
+          <FieldLabel
+            label="通胀率"
+            helpText="用于估算未来支出增长，通胀越高，长期覆盖建议通常越高。"
+          />
+        }
         value={values.inflationRate * 100}
         min={0}
         max={8}
@@ -93,7 +117,12 @@ export function BasicInputs({ values, onChange }: BasicInputsProps) {
       />
 
       <NumberField
-        label="提取率 SWR"
+        label={
+          <FieldLabel
+            label="提取率 SWR"
+            helpText="表示退休后每年可从资产中提取的比例，提取率越高，基础估算越低，但风险通常更高。"
+          />
+        }
         value={values.swr * 100}
         min={2}
         max={6}
@@ -101,7 +130,6 @@ export function BasicInputs({ values, onChange }: BasicInputsProps) {
         suffix="%"
         onChange={(value) => onChange("swr", value / 100)}
       />
-      <p className="field-hint">表示退休后每年的资产提取率。</p>
     </section>
   );
 }

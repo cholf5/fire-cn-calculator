@@ -1,5 +1,6 @@
 import { useState } from "react";
 import type { FireFormValues } from "../core/types";
+import { FieldLabel } from "./FieldLabel";
 import { NumberField } from "./NumberField";
 
 interface AdvancedInputsProps {
@@ -26,7 +27,12 @@ export function AdvancedInputs({ values, onChange }: AdvancedInputsProps) {
       {expanded ? (
         <div className="advanced-grid">
           <NumberField
-            label="医疗支出占比"
+            label={
+              <FieldLabel
+                label="医疗支出占比"
+                helpText="会按比例抬高总年支出，用于预留基础医疗和健康支出空间。"
+              />
+            }
             value={values.medicalExpenseRatio * 100}
             min={0}
             max={30}
@@ -34,10 +40,14 @@ export function AdvancedInputs({ values, onChange }: AdvancedInputsProps) {
             suffix="%"
             onChange={(value) => onChange("medicalExpenseRatio", value / 100)}
           />
-          <p className="field-hint">会按比例抬高年支出估算。</p>
 
           <NumberField
-            label="租金增长率"
+            label={
+              <FieldLabel
+                label="租金增长率"
+                helpText="无房时用于推算未来住房支出的增长，会影响长期覆盖建议。"
+              />
+            }
             value={values.rentGrowthRate * 100}
             min={0}
             max={10}
@@ -46,10 +56,13 @@ export function AdvancedInputs({ values, onChange }: AdvancedInputsProps) {
             onChange={(value) => onChange("rentGrowthRate", value / 100)}
           />
 
-          <p className="field-hint">预留扩展，当前不影响主结果。</p>
-
           <NumberField
-            label="退休年限"
+            label={
+              <FieldLabel
+                label="退休年限"
+                helpText="用于估算需要覆盖多少年的退休生活，年限越长，长期覆盖建议通常越高。"
+              />
+            }
             value={values.retirementYears}
             min={10}
             max={60}
@@ -57,8 +70,6 @@ export function AdvancedInputs({ values, onChange }: AdvancedInputsProps) {
             suffix="年"
             onChange={(value) => onChange("retirementYears", value)}
           />
-
-          <p className="field-hint">预留扩展，当前不影响主结果。</p>
         </div>
       ) : null}
     </section>

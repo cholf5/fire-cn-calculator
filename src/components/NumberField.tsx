@@ -1,7 +1,7 @@
-import { useId } from "react";
+import { useId, type ReactNode } from "react";
 
 interface NumberFieldProps {
-  label: string;
+  label: ReactNode;
   value: number;
   min: number;
   max: number;

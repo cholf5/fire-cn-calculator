@@ -242,8 +242,7 @@ input {
 
 .field + .field,
 .toggle-row,
-.radio-group,
-.field-hint {
+.radio-group {
   margin-top: 18px;
 }
 
@@ -251,6 +250,12 @@ input {
   display: block;
   margin-bottom: 8px;
   font-weight: 600;
+}
+
+.field-label-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .field-inputs {
@@ -301,6 +306,72 @@ input {
   justify-content: space-between;
 }
 
+.info-tip {
+  position: relative;
+  display: inline-flex;
+}
+
+.info-tip-trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.2rem;
+  height: 1.2rem;
+  padding: 0;
+  border: 1px solid var(--panel-border);
+  border-radius: 999px;
+  background: var(--subtle-bg);
+  color: var(--muted-text);
+  font-size: 0.72rem;
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+  transition:
+    transform 0.18s ease,
+    border-color 0.18s ease,
+    color 0.18s ease;
+}
+
+.info-tip-trigger:hover,
+.info-tip-trigger:focus-visible,
+.info-tip-trigger.is-open {
+  border-color: var(--accent-strong);
+  color: var(--accent-strong);
+  outline: none;
+  transform: translateY(-1px);
+}
+
+.info-tip-popover {
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 0;
+  z-index: 20;
+  min-width: 14rem;
+  width: min(18rem, calc(100vw - 4rem));
+  padding: 12px 14px;
+  border: 1px solid var(--panel-border);
+  border-radius: 14px;
+  background: var(--panel-bg);
+  box-shadow: var(--panel-shadow);
+  color: var(--page-text);
+  font-size: 0.88rem;
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+.info-tip-popover::before {
+  content: "";
+  position: absolute;
+  top: -6px;
+  left: 10px;
+  width: 12px;
+  height: 12px;
+  background: var(--panel-bg);
+  border-top: 1px solid var(--panel-border);
+  border-left: 1px solid var(--panel-border);
+  transform: rotate(45deg);
+}
+
 .toggle {
   min-width: 72px;
   padding: 10px 14px;
@@ -322,11 +393,6 @@ input {
 
 .advanced-grid {
   margin-top: 18px;
-}
-
-.field-hint {
-  color: var(--muted-text);
-  font-size: 0.92rem;
 }
 
 .result-panel {
