@@ -79,7 +79,9 @@ export async function createShareCardBlob(data: ShareCardData): Promise<Blob> {
   context.fillStyle = "rgba(236, 240, 236, 0.72)";
   context.font = '500 24px "IBM Plex Sans", "Noto Sans SC", sans-serif';
   context.fillText(`实际收益率 ${formatPercent(data.realReturn, 2)}`, 76, 550);
-  context.fillText("已综合退休年限与未来支出增长口径", 788, 550);
+  context.textAlign = "right";
+  context.fillText("已综合退休年限与未来支出增长口径", 1124, 550, 336);
+  context.textAlign = "start";
 
   const blob = await new Promise<Blob | null>((resolve) => {
     canvas.toBlob((nextBlob) => resolve(nextBlob), "image/png");
