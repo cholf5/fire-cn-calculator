@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { defaultFormValues } from "../config/defaults";
 import { presets, type PresetKey } from "../config/presets";
 import { calculateFire, sanitizeFormValues } from "../core/calculator";
 import type { FireFormValues } from "../core/types";
@@ -45,10 +46,15 @@ export function useFireCalc() {
     setValues({ ...preset.values });
   }
 
+  function resetToDefaults() {
+    setValues({ ...defaultFormValues });
+  }
+
   return {
     values,
     result,
     updateValue,
     applyPreset,
+    resetToDefaults,
   };
 }

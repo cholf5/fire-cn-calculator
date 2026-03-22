@@ -5,7 +5,7 @@ import { ResultPanel } from "./components/ResultPanel";
 import { useFireCalc } from "./hooks/useFireCalc";
 
 export default function App() {
-  const { values, result, updateValue, applyPreset } = useFireCalc();
+  const { values, result, updateValue, applyPreset, resetToDefaults } = useFireCalc();
 
   return (
     <div className="app-shell">
@@ -16,6 +16,7 @@ export default function App() {
           values={values}
           onChange={updateValue}
           onPresetSelect={applyPreset}
+          onReset={resetToDefaults}
         />
       </main>
       <Disclaimer />

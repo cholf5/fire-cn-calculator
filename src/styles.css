@@ -112,6 +112,11 @@ input {
   color: #172121;
 }
 
+.preset-reset-button {
+  background: #d1682d;
+  color: #fff8f0;
+}
+
 .preset-button:hover,
 .expand-button:hover,
 .toggle:hover {
