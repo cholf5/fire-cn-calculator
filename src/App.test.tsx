@@ -214,6 +214,8 @@ test("点击复制分享卡片后会生成图片并写入剪贴板", async () =>
 
   expect(clipboardItemMock).toHaveBeenCalledTimes(1);
   expect(write).toHaveBeenCalledTimes(1);
+  expect(contextMock.fillText).toHaveBeenCalledWith("关键参数", 820, 416);
+  expect(contextMock.fillText).toHaveBeenCalledWith(expect.stringContaining("年支出"), 76, 550);
   expect(screen.getByRole("button", { name: "卡片已复制" })).not.toBeNull();
 });
 

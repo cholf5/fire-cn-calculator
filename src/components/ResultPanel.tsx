@@ -118,10 +118,14 @@ export function ResultPanel({ values, result }: ResultPanelProps) {
         baseTarget: result.fireTarget,
         longevityTarget: result.longevityAdjustedTarget,
         annualExpense: result.annualExpense,
+        swr: values.swr,
         safetyLabel: result.safetyLabel,
         realReturn: result.realReturn,
         cityTierLabel,
         hasHouse: values.hasHouse,
+        baseAnnualExpense: result.baseAnnualExpense,
+        annualHousingCost,
+        medicalAnnualExpense: result.medicalAnnualExpense,
       });
 
       await navigator.clipboard.write([
