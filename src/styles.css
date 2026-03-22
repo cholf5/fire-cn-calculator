@@ -277,6 +277,7 @@ input {
 .result-grid div,
 .tag-block,
 .breakdown-card,
+.longevity-card,
 .range-card,
 .risk-card {
   padding: 16px;
@@ -297,9 +298,20 @@ input {
   font-size: 1rem;
 }
 
+.longevity-card h2 {
+  margin: 0 0 14px;
+  font-size: 1rem;
+}
+
 .breakdown-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.longevity-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 12px;
 }
 
@@ -309,8 +321,29 @@ input {
   border-radius: 0;
 }
 
+.longevity-grid div {
+  padding: 0;
+  background: transparent;
+  border-radius: 0;
+}
+
 .breakdown-grid span {
   color: rgba(249, 245, 236, 0.76);
+}
+
+.longevity-grid span,
+.longevity-caption {
+  color: rgba(249, 245, 236, 0.76);
+}
+
+.longevity-grid strong {
+  display: block;
+  margin-top: 6px;
+  font-size: 1.1rem;
+}
+
+.longevity-caption {
+  margin: 14px 0 0;
 }
 
 .risk-tag {
@@ -395,6 +428,10 @@ input {
   }
 
   .breakdown-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .longevity-grid {
     grid-template-columns: 1fr;
   }
 

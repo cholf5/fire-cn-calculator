@@ -2,7 +2,7 @@ import { defaultFormValues } from "../config/defaults";
 import { sanitizeFormValues } from "../core/calculator";
 import type { FireFormValues } from "../core/types";
 
-type UrlParamKey = "m" | "c" | "h" | "r" | "i" | "s" | "med";
+type UrlParamKey = "m" | "c" | "h" | "r" | "i" | "s" | "med" | "rg" | "ry";
 
 const urlFieldMap: Record<UrlParamKey, keyof FireFormValues> = {
   m: "monthlyBaseExpense",
@@ -12,6 +12,8 @@ const urlFieldMap: Record<UrlParamKey, keyof FireFormValues> = {
   i: "inflationRate",
   s: "swr",
   med: "medicalExpenseRatio",
+  rg: "rentGrowthRate",
+  ry: "retirementYears",
 };
 
 function parseBoolean(rawValue: string | null): boolean | undefined {
@@ -108,6 +110,14 @@ export function buildSearchParams(values: FireFormValues): string {
 
   if (shouldSerializeField("medicalExpenseRatio", values)) {
     params.set("med", String(values.medicalExpenseRatio));
+  }
+
+  if (shouldSerializeField("rentGrowthRate", values)) {
+    params.set("rg", String(values.rentGrowthRate));
+  }
+
+  if (shouldSerializeField("retirementYears", values)) {
+    params.set("ry", String(values.retirementYears));
   }
 
   const query = params.toString();

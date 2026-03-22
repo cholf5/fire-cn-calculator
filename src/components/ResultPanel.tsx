@@ -90,6 +90,24 @@ export function ResultPanel({ values, result }: ResultPanelProps) {
         </div>
       </div>
 
+      <div className="longevity-card">
+        <h2>长期校正参考</h2>
+        <div className="longevity-grid">
+          <div>
+            <span>参考资产</span>
+            <strong>{formatCurrency(result.longevityAdjustedTarget)}</strong>
+          </div>
+          <div>
+            <span>与主结果差额</span>
+            <strong>
+              {result.longevityAdjustmentDelta >= 0 ? "+" : "-"}
+              {formatCurrency(Math.abs(result.longevityAdjustmentDelta)).replace("¥ ", "¥ ")}
+            </strong>
+          </div>
+        </div>
+        <p className="longevity-caption">基于退休年限与未来支出增长估算</p>
+      </div>
+
       <div className="tag-block">
         <span className="tag-label">安全等级</span>
         <strong className="risk-tag">{result.safetyLabel}</strong>

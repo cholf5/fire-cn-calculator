@@ -128,6 +128,7 @@ function getRiskHighlights(values: FireFormValues): string[] {
 export function calculateFire(values: FireFormValues): FireCalculationResult {
   const housingRatio = values.hasHouse ? 0 : housingRatios[values.cityTier];
   const monthlyHousingCost = values.monthlyBaseExpense * housingRatio;
+  const annualHousingCost = monthlyHousingCost * 12;
   const monthlyTotalExpense = values.monthlyBaseExpense + monthlyHousingCost;
   const baseAnnualExpense = monthlyTotalExpense * 12;
   const medicalAnnualExpense = baseAnnualExpense * values.medicalExpenseRatio;
@@ -135,13 +136,29 @@ export function calculateFire(values: FireFormValues): FireCalculationResult {
   const fireTarget = annualExpense / values.swr;
   const realReturn =
     (1 + values.returnRate) / (1 + values.inflationRate) - 1;
+  const inflationTrackedAnnualExpense = baseAnnualExpense + medicalAnnualExpense;
+  let longevityAdjustedTarget = 0;
+
+  for (let year = 1; year <= values.retirementYears; year += 1) {
+    const inflationAdjustedExpense =
+      inflationTrackedAnnualExpense * (1 + values.inflationRate) ** (year - 1);
+    const housingAdjustedExpense =
+      annualHousingCost * (1 + values.rentGrowthRate) ** (year - 1);
+    const yearExpense = inflationAdjustedExpense + housingAdjustedExpense;
+    const discountedExpense = yearExpense / (1 + values.returnRate) ** year;
+
+    longevityAdjustedTarget += discountedExpense;
+  }
 
   return {
     monthlyHousingCost,
+    annualHousingCost,
     baseAnnualExpense,
     medicalAnnualExpense,
     annualExpense,
     fireTarget,
+    longevityAdjustedTarget,
+    longevityAdjustmentDelta: longevityAdjustedTarget - fireTarget,
     realReturn,
     safetyLabel: getSafetyLabel(values.swr),
     riskHighlights: getRiskHighlights(values),

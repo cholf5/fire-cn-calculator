@@ -130,3 +130,13 @@ test("关键输入字段会显示参数说明", async () => {
 
   expect(screen.getByText("会按比例抬高年支出估算。")).not.toBeNull();
 });
+
+test("结果区会展示长期校正参考与差额", () => {
+  window.history.replaceState({}, "", "/?m=12000&h=0&c=tier1&med=0.12&ry=40&rg=0.05");
+
+  render(<App />);
+
+  expect(screen.getByText("长期校正参考")).not.toBeNull();
+  expect(screen.getByText("基于退休年限与未来支出增长估算")).not.toBeNull();
+  expect(screen.getByText(/与主结果差额/)).not.toBeNull();
+});

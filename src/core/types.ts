@@ -14,10 +14,13 @@ export interface FireFormValues {
 
 export interface FireCalculationResult {
   monthlyHousingCost: number;
+  annualHousingCost: number;
   baseAnnualExpense: number;
   medicalAnnualExpense: number;
   annualExpense: number;
   fireTarget: number;
+  longevityAdjustedTarget: number;
+  longevityAdjustmentDelta: number;
   realReturn: number;
   safetyLabel: string;
   riskHighlights: string[];

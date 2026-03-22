@@ -67,4 +67,69 @@ describe("calculateFire", () => {
       "无房状态下租住成本可能继续上升",
     ]);
   });
+
+  test("有房时住房年成本为 0，长期校正参考可正常计算", () => {
+    const values = {
+      ...getDefaultFormValues(),
+      hasHouse: true,
+      retirementYears: 40,
+    };
+
+    const result = calculateFire(values);
+
+    expect(result.annualHousingCost).toBe(0);
+    expect(result.longevityAdjustedTarget).toBeGreaterThan(0);
+  });
+
+  test("无房时更高的租金增长率会抬高长期校正参考", () => {
+    const baseValues = {
+      ...getDefaultFormValues(),
+      hasHouse: false,
+      cityTier: "tier1" as const,
+      retirementYears: 40,
+    };
+
+    const lowGrowth = calculateFire({
+      ...baseValues,
+      rentGrowthRate: 0.01,
+    });
+    const highGrowth = calculateFire({
+      ...baseValues,
+      rentGrowthRate: 0.06,
+    });
+
+    expect(highGrowth.longevityAdjustedTarget).toBeGreaterThan(lowGrowth.longevityAdjustedTarget);
+  });
+
+  test("退休年限增加时长期校正参考会上升", () => {
+    const baseValues = {
+      ...getDefaultFormValues(),
+      hasHouse: false,
+    };
+
+    const shorter = calculateFire({
+      ...baseValues,
+      retirementYears: 20,
+    });
+    const longer = calculateFire({
+      ...baseValues,
+      retirementYears: 40,
+    });
+
+    expect(longer.longevityAdjustedTarget).toBeGreaterThan(shorter.longevityAdjustedTarget);
+  });
+
+  test("当收益率低于支出增长时仍返回稳定的长期校正参考", () => {
+    const result = calculateFire({
+      ...getDefaultFormValues(),
+      hasHouse: false,
+      returnRate: 0.01,
+      inflationRate: 0.03,
+      rentGrowthRate: 0.05,
+      retirementYears: 35,
+    });
+
+    expect(Number.isFinite(result.longevityAdjustedTarget)).toBe(true);
+    expect(result.longevityAdjustedTarget).toBeGreaterThan(result.fireTarget);
+  });
 });
