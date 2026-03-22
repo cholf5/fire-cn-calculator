@@ -629,9 +629,21 @@ input {
 .disclaimer {
   margin-top: 20px;
   padding: 20px 24px;
+  display: grid;
+  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+  gap: 24px;
   border-radius: 24px;
   background: var(--disclaimer-bg);
   border: 1px solid var(--panel-border);
+}
+
+.disclaimer-column {
+  min-width: 0;
+}
+
+.disclaimer-column + .disclaimer-column {
+  padding-left: 24px;
+  border-left: 1px solid var(--panel-border);
 }
 
 .disclaimer p {
@@ -686,6 +698,18 @@ input {
 
   .composition-legend {
     grid-template-columns: 1fr;
+  }
+
+  .disclaimer {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+
+  .disclaimer-column + .disclaimer-column {
+    padding-left: 0;
+    padding-top: 18px;
+    border-left: 0;
+    border-top: 1px solid var(--panel-border);
   }
 
   .toggle-row {
