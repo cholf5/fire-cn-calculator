@@ -103,3 +103,16 @@ test("预设只在完全匹配时高亮，手动改值后取消高亮", async ()
   expect(screen.getByRole("button", { name: "舒适" }).className).not.toContain("is-active");
   expect(screen.getByRole("button", { name: "节制" }).className).not.toContain("is-active");
 });
+
+test("结果区会展示基础年支出、住房成本补充和医疗支出增量", () => {
+  window.history.replaceState({}, "", "/?m=12000&h=0&c=tier1&med=0.12");
+
+  render(<App />);
+
+  expect(screen.getByText("基础年支出")).not.toBeNull();
+  expect(screen.getByText("¥ 201,600")).not.toBeNull();
+  expect(screen.getByText("住房成本补充")).not.toBeNull();
+  expect(screen.getByText("¥ 57,600")).not.toBeNull();
+  expect(screen.getByText("医疗支出增量")).not.toBeNull();
+  expect(screen.getByText("¥ 24,192")).not.toBeNull();
+});

@@ -12,6 +12,7 @@ export function ResultPanel({ values, result }: ResultPanelProps) {
   const barMax = result.upperBound;
   const recommendedWidth = `${(result.fireTarget / barMax) * 100}%`;
   const conservativeWidth = `${(result.lowerBound / barMax) * 100}%`;
+  const annualHousingCost = result.monthlyHousingCost * 12;
 
   useEffect(() => {
     if (copyState === "idle") {
@@ -68,6 +69,24 @@ export function ResultPanel({ values, result }: ResultPanelProps) {
         <div>
           <span>实际收益率</span>
           <strong>{formatPercent(result.realReturn, 2)}</strong>
+        </div>
+      </div>
+
+      <div className="breakdown-card">
+        <h2>结果拆解</h2>
+        <div className="breakdown-grid">
+          <div>
+            <span>基础年支出</span>
+            <strong>{formatCurrency(result.baseAnnualExpense)}</strong>
+          </div>
+          <div>
+            <span>住房成本补充</span>
+            <strong>{formatCurrency(annualHousingCost)}</strong>
+          </div>
+          <div>
+            <span>医疗支出增量</span>
+            <strong>{formatCurrency(result.medicalAnnualExpense)}</strong>
+          </div>
         </div>
       </div>
 
