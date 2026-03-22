@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import type { FireCalculationResult, FireFormValues } from "../core/types";
 import { formatCurrency, formatPercent } from "../utils/format";
+import { createShareCardBlob } from "../utils/shareCard";
 
 interface ResultPanelProps {
   values: FireFormValues;
@@ -10,6 +11,7 @@ interface ResultPanelProps {
 export function ResultPanel({ values, result }: ResultPanelProps) {
   const [copyLinkState, setCopyLinkState] = useState<"idle" | "success" | "error">("idle");
   const [copySummaryState, setCopySummaryState] = useState<"idle" | "success" | "error">("idle");
+  const [copyImageState, setCopyImageState] = useState<"idle" | "success" | "error">("idle");
   const barMax = result.upperBound;
   const recommendedWidth = `${(result.fireTarget / barMax) * 100}%`;
   const conservativeWidth = `${(result.lowerBound / barMax) * 100}%`;
@@ -58,6 +60,20 @@ export function ResultPanel({ values, result }: ResultPanelProps) {
     };
   }, [copySummaryState]);
 
+  useEffect(() => {
+    if (copyImageState === "idle") {
+      return;
+    }
+
+    const timer = window.setTimeout(() => {
+      setCopyImageState("idle");
+    }, 1800);
+
+    return () => {
+      window.clearTimeout(timer);
+    };
+  }, [copyImageState]);
+
   async function handleCopyLink() {
     try {
       await navigator.clipboard.writeText(window.location.href);
@@ -88,6 +104,37 @@ export function ResultPanel({ values, result }: ResultPanelProps) {
     }
   }
 
+  async function handleCopyImage() {
+    try {
+      if (
+        typeof navigator.clipboard.write !== "function" ||
+        typeof ClipboardItem === "undefined"
+      ) {
+        throw new Error("clipboard image unsupported");
+      }
+
+      const blob = await createShareCardBlob({
+        recommendedTarget,
+        baseTarget: result.fireTarget,
+        longevityTarget: result.longevityAdjustedTarget,
+        annualExpense: result.annualExpense,
+        safetyLabel: result.safetyLabel,
+        realReturn: result.realReturn,
+        cityTierLabel,
+        hasHouse: values.hasHouse,
+      });
+
+      await navigator.clipboard.write([
+        new ClipboardItem({
+          "image/png": blob,
+        }),
+      ]);
+      setCopyImageState("success");
+    } catch {
+      setCopyImageState("error");
+    }
+  }
+
   const copyLinkLabel =
     copyLinkState === "success"
       ? "已复制"
@@ -100,6 +147,12 @@ export function ResultPanel({ values, result }: ResultPanelProps) {
       : copySummaryState === "error"
         ? "摘要复制失败"
         : "复制当前结果摘要";
+  const copyImageLabel =
+    copyImageState === "success"
+      ? "卡片已复制"
+      : copyImageState === "error"
+        ? "卡片复制失败"
+        : "复制分享卡片";
   const adjustmentDirectionText =
     result.longevityAdjustmentDelta > 0
       ? "上调"
@@ -130,6 +183,9 @@ export function ResultPanel({ values, result }: ResultPanelProps) {
           </button>
           <button className="share-button" type="button" onClick={handleCopySummary}>
             {copySummaryLabel}
+          </button>
+          <button className="share-button" type="button" onClick={handleCopyImage}>
+            {copyImageLabel}
           </button>
         </div>
       </div>
